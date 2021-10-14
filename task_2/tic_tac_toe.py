@@ -17,6 +17,7 @@ number_for_win = 5    # сколько нужно в ряд для победы
 
 board = ([[0]*board_size for item in range(board_size)])  # создание игрового поля
 
+
 def evaluate(state):
     """
     Function to heuristic evaluation of state.
@@ -31,8 +32,6 @@ def evaluate(state):
         score = 0
 
     return score
-
-
 
 
 def wins(state, player):
@@ -102,7 +101,6 @@ def empty_cells(state):
         for y, cell in enumerate(row):
             if cell == 0:
                 cells.append([x, y])
-
     return cells
 
 
