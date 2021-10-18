@@ -198,7 +198,7 @@ def render(state, c_choice, h_choice):
         +1: c_choice,
         0: ' '
     }
-    str_line = '--------------------------------------------------'
+    str_line = '-------------------------------------------------------------'
 
     print('\n' + str_line)
     cell_number = 1
@@ -206,8 +206,9 @@ def render(state, c_choice, h_choice):
     for row in state:
         for cell in row:
             symbol = chars[cell]
-            print(f'| {cell_number} {symbol} |', end='')
+            print(f'|{cell_number} {symbol} ', end='')
             cell_number += 1
+        print(f'|', end='')
         print('\n' + str_line)
 
 
@@ -320,12 +321,12 @@ def main():
         ai_turn(c_choice, h_choice)
 
     # Game over message
-    if wins(board, HUMAN):
+    if wins(board, COMP):
         clean()
         print(f'Human turn [{h_choice}]')
         render(board, c_choice, h_choice)
-        print('YOU WIN!')
-    elif wins(board, COMP):
+        print('COMP LOSE! YOU WIN!')
+    elif wins(board, HUMAN):
         clean()
         print(f'Computer turn [{c_choice}]')
         render(board, c_choice, h_choice)
