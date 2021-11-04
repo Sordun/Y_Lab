@@ -12,8 +12,9 @@ from os import system
 HUMAN = -1
 COMP = +1
 
-board_size = 10    # размер игрового поля
-number_for_win = 5    # сколько нужно в ряд для победы
+board_size = 10        # РАЗМЕР ИГРОВОГО ПОЛЯ
+number_for_win = 5     # СКОЛЬКО НУЖНО В РЯД ДЛЯ ПОБЕДЫ
+comp_set_move = None   # Точка выбора компьютера
 
 board = ([[0]*board_size for item in range(board_size)])  # создание игрового поля
 
@@ -191,6 +192,8 @@ def render(state, c_choice, h_choice):
     """
     Print the board on console
     :param state: current state of the board
+    :param c_choice: computer's choice +1
+    :param h_choice: human's choice -1
     """
 
     chars = {
@@ -198,18 +201,18 @@ def render(state, c_choice, h_choice):
         +1: c_choice,
         0: ' '
     }
-    str_line = '-------------------------------------------------------------'
+    str_line = '-------'
 
-    print('\n' + str_line)
+    print('\n' + str_line * board_size)
     cell_number = 1
 
     for row in state:
         for cell in row:
             symbol = chars[cell]
-            print(f'|{cell_number} {symbol} ', end='')
+            print(f'|{cell_number:^3} {symbol} ', end='')
             cell_number += 1
         print(f'|', end='')
-        print('\n' + str_line)
+        print('\n' + str_line * board_size)
 
 
 def ai_turn(c_choice, h_choice):
@@ -220,6 +223,7 @@ def ai_turn(c_choice, h_choice):
     :param h_choice: human's choice X or O
     :return:
     """
+    global comp_set_move
     depth = len(empty_cells(board))
     if depth == 0 or game_over(board):
         return
@@ -229,21 +233,25 @@ def ai_turn(c_choice, h_choice):
     render(board, c_choice, h_choice)
 
     if depth > 9:
-        x = choice(list(range(board_size))) # выбираем случайную строку
-        y = choice(list(range(board_size))) # выбираем случайный столб
+        x = choice(list(range(board_size)))  # выбираем случайную строку
+        y = choice(list(range(board_size)))  # выбираем случайный столб
     else:
         move = minimax(board, depth, COMP)
         x, y = move[0], move[1]
 
     set_move(x, y, COMP)
+    comp_set_move = (x * 10) + (y + 1)
+    print(f'Компьютер выбрал: {comp_set_move}')
     time.sleep(1)
+    return comp_set_move
 
 
-def human_turn(c_choice, h_choice):
+def human_turn(c_choice, h_choice, comp_set_move):
     """
     The Human plays choosing a valid move.
     :param c_choice: computer's choice X or O
     :param h_choice: human's choice X or O
+    :param comp_set_move: shows computer selection
     :return:
     """
     depth = len(empty_cells(board))
@@ -257,10 +265,11 @@ def human_turn(c_choice, h_choice):
     clean()
     print(f'Human turn [{h_choice}]')
     render(board, c_choice, h_choice)
+    print(f'Компьютер выбрал: {comp_set_move}')
 
-    while move < 1 or move > 100:
+    while move < 1 or move > board_size**2:
         try:
-            move = int(input('Use numpad (1..100): '))
+            move = int(input(f'Use numpad (1..{board_size**2}): '))
             coord = moves[move]
             can_move = set_move(coord[0], coord[1], HUMAN)
 
@@ -317,7 +326,7 @@ def main():
             ai_turn(c_choice, h_choice)
             first = ''
 
-        human_turn(c_choice, h_choice)
+        human_turn(c_choice, h_choice, comp_set_move)
         ai_turn(c_choice, h_choice)
 
     # Game over message
