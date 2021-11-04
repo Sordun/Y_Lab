@@ -456,17 +456,27 @@ SHAPES = {
 
 def run() -> None:
     """Starting calculations."""
-    print('Введите номер фигуры:')
+    print('Варианты фигур\n')
     shapes_list_text = ''
 
     for num, shape_class in SHAPES.items():
         shapes_list_text += f'{num} - {shape_class.title}\n'
+    print(shapes_list_text)
 
-    shape_num = int(input(shapes_list_text))
-
-    if shape_num not in SHAPES:
-        print('Неправильный номер фигуры')
-        return
+    correct_input = False
+    while not correct_input:
+        try:
+            shape_num = int(input("Введите номер фигуры: "))
+            if shape_num not in SHAPES:
+                print('Неправильный номер фигуры')
+                print('Принимаются только цифры указанные выше')
+            else:
+                correct_input = True
+        except (EOFError, KeyboardInterrupt):
+            print('Bye')
+            exit()
+        except (KeyError, ValueError):
+            print('Принимаются только цифры указанные выше')
 
     shape_class = SHAPES[shape_num]
     params_list_text = 'Вводите параметры через пробел:\n'
