@@ -12,11 +12,11 @@ from os import system
 HUMAN = -1
 COMP = +1
 
-board_size = 10        # РАЗМЕР ИГРОВОГО ПОЛЯ
-number_for_win = 5     # СКОЛЬКО НУЖНО В РЯД ДЛЯ ПОБЕДЫ
-comp_set_move = None   # Точка выбора компьютера
+board_size = 10  # РАЗМЕР ИГРОВОГО ПОЛЯ
+number_for_win = 5  # СКОЛЬКО НУЖНО В РЯД ДЛЯ ПОБЕДЫ
+comp_set_move = None  # Точка выбора компьютера
 
-board = ([[0]*board_size for item in range(board_size)])  # создание игрового поля
+board = [[0] * board_size for item in range(board_size)]  # создание игрового поля
 
 
 def evaluate(state):
@@ -48,9 +48,11 @@ def wins(state, player):
 
     def win_list(num_list, number_for_win):
         """
-        Функция для подсчёта всех столбцов, строк и по диагонали 
+        Функция для подсчёта всех столбцов, строк и по диагонали
         """
-        return [num_list[num:num + number_for_win] for num in range(len(num_list) - 4)]
+        return [
+            num_list[num : num + number_for_win] for num in range(len(num_list) - 4)
+        ]
 
     horizontally = []
     vertically = []
@@ -182,10 +184,10 @@ def clean():
     Clears the console
     """
     os_name = platform.system().lower()
-    if 'windows' in os_name:
-        system('cls')
+    if "windows" in os_name:
+        system("cls")
     else:
-        system('clear')
+        system("clear")
 
 
 def render(state, c_choice, h_choice):
@@ -196,23 +198,19 @@ def render(state, c_choice, h_choice):
     :param h_choice: human's choice -1
     """
 
-    chars = {
-        -1: h_choice,
-        +1: c_choice,
-        0: ' '
-    }
-    str_line = '-------'
+    chars = {-1: h_choice, +1: c_choice, 0: " "}
+    str_line = "-------"
 
-    print('\n' + str_line * board_size)
+    print("\n" + str_line * board_size)
     cell_number = 1
 
     for row in state:
         for cell in row:
             symbol = chars[cell]
-            print(f'|{cell_number:^3} {symbol} ', end='')
+            print(f"|{cell_number:^3} {symbol} ", end="")
             cell_number += 1
-        print(f'|', end='')
-        print('\n' + str_line * board_size)
+        print(f"|", end="")
+        print("\n" + str_line * board_size)
 
 
 def ai_turn(c_choice, h_choice):
@@ -229,7 +227,7 @@ def ai_turn(c_choice, h_choice):
         return
 
     clean()
-    print(f'Computer turn [{c_choice}]')
+    print(f"Computer turn [{c_choice}]")
     render(board, c_choice, h_choice)
 
     if depth > 9:
@@ -241,7 +239,7 @@ def ai_turn(c_choice, h_choice):
 
     set_move(x, y, COMP)
     comp_set_move = (x * 10) + (y + 1)
-    print(f'Компьютер выбрал: {comp_set_move}')
+    print(f"Компьютер выбрал: {comp_set_move}")
     time.sleep(1)
     return comp_set_move
 
@@ -263,24 +261,24 @@ def human_turn(c_choice, h_choice, comp_set_move):
     moves = valid_moves(board_size)
 
     clean()
-    print(f'Human turn [{h_choice}]')
+    print(f"Human turn [{h_choice}]")
     render(board, c_choice, h_choice)
-    print(f'Компьютер выбрал: {comp_set_move}')
+    print(f"Компьютер выбрал: {comp_set_move}")
 
-    while move < 1 or move > board_size**2:
+    while move < 1 or move > board_size ** 2:
         try:
-            move = int(input(f'Use numpad (1..{board_size**2}): '))
+            move = int(input(f"Use numpad (1..{board_size**2}): "))
             coord = moves[move]
             can_move = set_move(coord[0], coord[1], HUMAN)
 
             if not can_move:
-                print('Bad move')
+                print("Bad move")
                 move = -1
         except (EOFError, KeyboardInterrupt):
-            print('Bye')
+            print("Bye")
             exit()
         except (KeyError, ValueError):
-            print('Bad choice')
+            print("Bad choice")
 
 
 def main():
@@ -288,43 +286,43 @@ def main():
     Main function that calls all functions
     """
     clean()
-    h_choice = ''  # X or O
-    c_choice = ''  # X or O
-    first = ''  # if human is the first
+    h_choice = ""  # X or O
+    c_choice = ""  # X or O
+    first = ""  # if human is the first
 
     # Human chooses X or O to play
-    while h_choice != 'O' and h_choice != 'X':
+    while h_choice != "O" and h_choice != "X":
         try:
-            print('')
-            h_choice = input('Choose X or O\nChosen: ').upper()
+            print("")
+            h_choice = input("Choose X or O\nChosen: ").upper()
         except (EOFError, KeyboardInterrupt):
-            print('Bye')
+            print("Bye")
             exit()
         except (KeyError, ValueError):
-            print('Bad choice')
+            print("Bad choice")
 
     # Setting computer's choice
-    if h_choice == 'X':
-        c_choice = 'O'
+    if h_choice == "X":
+        c_choice = "O"
     else:
-        c_choice = 'X'
+        c_choice = "X"
 
     # Human may starts first
     clean()
-    while first != 'Y' and first != 'N':
+    while first != "Y" and first != "N":
         try:
-            first = input('First to start?[y/n]: ').upper()
+            first = input("First to start?[y/n]: ").upper()
         except (EOFError, KeyboardInterrupt):
-            print('Bye')
+            print("Bye")
             exit()
         except (KeyError, ValueError):
-            print('Bad choice')
+            print("Bad choice")
 
     # Main loop of this game
     while len(empty_cells(board)) > 0 and not game_over(board):
-        if first == 'N':
+        if first == "N":
             ai_turn(c_choice, h_choice)
-            first = ''
+            first = ""
 
         human_turn(c_choice, h_choice, comp_set_move)
         ai_turn(c_choice, h_choice)
@@ -332,21 +330,21 @@ def main():
     # Game over message
     if wins(board, COMP):
         clean()
-        print(f'Human turn [{h_choice}]')
+        print(f"Human turn [{h_choice}]")
         render(board, c_choice, h_choice)
-        print('COMP LOSE! YOU WIN!')
+        print("COMP LOSE! YOU WIN!")
     elif wins(board, HUMAN):
         clean()
-        print(f'Computer turn [{c_choice}]')
+        print(f"Computer turn [{c_choice}]")
         render(board, c_choice, h_choice)
-        print('YOU LOSE!')
+        print("YOU LOSE!")
     else:
         clean()
         render(board, c_choice, h_choice)
-        print('DRAW!')
+        print("DRAW!")
 
     exit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
