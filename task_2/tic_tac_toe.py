@@ -149,7 +149,7 @@ def minimax(state, depth, player):
     AI function that choice the best move
     :param state: current state of the board
     :param depth: node index in the tree (0 <= depth <= 9),
-    but never nine in this case (see iaturn() function)
+    but never nine in this case (see ia_turn() function)
     :param player: an human or a computer
     :return: a list with [the best row, best col, best score]
     """
@@ -187,7 +187,7 @@ def clean():
     if "windows" in os_name:
         system("cls")
     else:
-        pass    # system("clear")  # TERM environment variable not set.
+        pass  # system("clear")  # TERM environment variable not set.
 
 
 def render(state, c_choice, h_choice):
@@ -198,17 +198,16 @@ def render(state, c_choice, h_choice):
     :param h_choice: human's choice -1
     """
 
-    chars = {-1: h_choice, +1: c_choice, 0: " "}
-    str_line = "-------"
+    chars = {-1: h_choice, +1: c_choice, 0: 1}
+    str_line = "----"
 
     print("\n" + str_line * board_size)
-    cell_number = 1
 
     for row in state:
         for cell in row:
             symbol = chars[cell]
-            print(f"|{cell_number:^3} {symbol} ", end="")
-            cell_number += 1
+            print(f"|{symbol:^3}", end="")
+            chars[0] += 1
         print(f"|", end="")
         print("\n" + str_line * board_size)
 
@@ -238,7 +237,7 @@ def ai_turn(c_choice, h_choice):
         x, y = move[0], move[1]
 
     set_move(x, y, COMP)
-    comp_set_move = (x * 10) + (y + 1)
+    comp_set_move = (x * board_size) + (y + 1)
     print(f"Компьютер выбрал: {comp_set_move}")
     time.sleep(1)
     return comp_set_move
