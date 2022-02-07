@@ -51,7 +51,7 @@ def wins(state, player):
         Функция для подсчёта всех столбцов, строк и по диагонали
         """
         return [
-            num_list[num : num + number_for_win] for num in range(len(num_list) - 4)
+            num_list[num: num + number_for_win] for num in range(len(num_list) - 4)
         ]
 
     horizontally = []
@@ -187,7 +187,7 @@ def clean():
     if "windows" in os_name:
         system("cls")
     else:
-        system("clear")
+        pass    # system("clear")  # TERM environment variable not set.
 
 
 def render(state, c_choice, h_choice):
