@@ -1,10 +1,21 @@
 import unittest
-from calculator import (Circle, Rectangle, Square, Triangle, Rhombus, Trapezoid, Sphere, Parallelepiped, Cube,
-                        Pyramid, Cylinder, Cone)
+from calculator import (
+    Circle,
+    Rectangle,
+    Square,
+    Triangle,
+    Rhombus,
+    Trapezoid,
+    Sphere,
+    Parallelepiped,
+    Cube,
+    Pyramid,
+    Cylinder,
+    Cone,
+)
 
 
 class ErrorsTest(unittest.TestCase):
-    
     @staticmethod
     def test_circle_perimeter():
         circle = Circle(5)
@@ -126,5 +137,5 @@ class ErrorsTest(unittest.TestCase):
         assert cone.volume() == 1813.75
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

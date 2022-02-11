@@ -32,7 +32,7 @@ class Shape:
         if not cls is Shape:
             parent_data = cls.__bases__[0].get_print_data()
 
-        if hasattr(cls, 'print_data'):
+        if hasattr(cls, "print_data"):
             result = {}
             result.update(cls.print_data)
             result.update(parent_data)
@@ -45,9 +45,10 @@ class Shape2D(Shape):
     """
     Flat figure.
     """
+
     print_data = {
-        'perimeter': 'Периметр',
-        'area': 'Площадь',
+        "perimeter": "Периметр",
+        "area": "Площадь",
     }
 
     @abc.abstractmethod
@@ -64,15 +65,15 @@ class Shape2D(Shape):
 class Circle(Shape2D):
     """A class for circle."""
 
-    title = 'Круг'
+    title = "Круг"
     params = {
-        'r': 'Радиус',
+        "r": "Радиус",
     }
 
     print_data = {
-        'diam': 'Диаметр',
-        'area': 'Площадь',
-        'perimeter': 'Периметр',
+        "diam": "Диаметр",
+        "area": "Площадь",
+        "perimeter": "Периметр",
     }
 
     def __init__(self, r) -> None:
@@ -98,13 +99,13 @@ class Circle(Shape2D):
 class Rectangle(Shape2D):
     """A class for rectangle."""
 
-    title = 'Прямоугольник'
+    title = "Прямоугольник"
     params = {
-        'a': 'сторона A',
-        'b': 'сторона B',
+        "a": "сторона A",
+        "b": "сторона B",
     }
     print_data = {
-        'diagonal': 'Диагональ',
+        "diagonal": "Диагональ",
     }
 
     def __init__(self, a, b) -> None:
@@ -130,9 +131,9 @@ class Rectangle(Shape2D):
 class Square(Rectangle):
     """A class for square."""
 
-    title = 'Квадрат'
+    title = "Квадрат"
     params = {
-        'a': 'сторона A',
+        "a": "сторона A",
     }
 
     def __init__(self, a) -> None:
@@ -142,14 +143,14 @@ class Square(Rectangle):
 class Triangle(Shape2D):
     """A class for triangle."""
 
-    title = 'Треугольник'
+    title = "Треугольник"
     params = {
-        'a': 'сторона A',
-        'b': 'сторона B',
-        'c': 'сторона C',
+        "a": "сторона A",
+        "b": "сторона B",
+        "c": "сторона C",
     }
     print_data = {
-        'radius': 'Радиус вписанной окружности',
+        "radius": "Радиус вписанной окружности",
     }
 
     def __init__(self, a, b, c) -> None:
@@ -179,10 +180,10 @@ class Triangle(Shape2D):
 class Rhombus(Shape2D):
     """A class for rhombus."""
 
-    title = 'Ромб'
+    title = "Ромб"
     params = {
-        'd1': 'Диагональ 1',
-        'd2': 'Диагональ 2',
+        "d1": "Диагональ 1",
+        "d2": "Диагональ 2",
     }
 
     def __init__(self, d1, d2) -> None:
@@ -204,16 +205,16 @@ class Rhombus(Shape2D):
 class Trapezoid(Shape2D):
     """A class for trapezoid."""
 
-    title = 'Трапеция'
+    title = "Трапеция"
     params = {
-        'a': 'Сторона A (нижняя)',
-        'b': 'Сторона B (верхняя)',
-        'c': 'Сторона C',
-        'd': 'Сторона D',
-        'h': 'Высота H',
+        "a": "Сторона A (нижняя)",
+        "b": "Сторона B (верхняя)",
+        "c": "Сторона C",
+        "d": "Сторона D",
+        "h": "Высота H",
     }
     print_data = {
-        'diagonals': 'Диагонали',
+        "diagonals": "Диагонали",
     }
 
     def __init__(self, a, b, c, d, h) -> None:
@@ -238,8 +239,13 @@ class Trapezoid(Shape2D):
     def get_d1(self) -> float:
         """First diagonal."""
         try:
-            return sqrt(pow(self.__d, 2) + self.__a * self.__b - self.__a * (pow(self.__d, 2) - pow(self.__c, 2)) /
-                        (self.__a - self.__b))
+            return sqrt(
+                pow(self.__d, 2)
+                + self.__a * self.__b
+                - self.__a
+                * (pow(self.__d, 2) - pow(self.__c, 2))
+                / (self.__a - self.__b)
+            )
         except ValueError:
             return 0
 
@@ -247,8 +253,13 @@ class Trapezoid(Shape2D):
     def get_d2(self) -> float:
         """Second diagonal."""
         try:
-            return sqrt(pow(self.__c, 2) + self.__a * self.__b - self.__a * (pow(self.__c, 2) - pow(self.__d, 2)) /
-                        (self.__a - self.__b))
+            return sqrt(
+                pow(self.__c, 2)
+                + self.__a * self.__b
+                - self.__a
+                * (pow(self.__c, 2) - pow(self.__d, 2))
+                / (self.__a - self.__b)
+            )
         except ValueError:
             return 0
 
@@ -263,8 +274,8 @@ class Shape3D(Shape):
     """
 
     print_data = {
-        'surface_area': 'Площадь поверхности',
-        'volume': 'Объем',
+        "surface_area": "Площадь поверхности",
+        "volume": "Объем",
     }
 
     @abc.abstractmethod
@@ -281,12 +292,12 @@ class Shape3D(Shape):
 class Sphere(Shape3D):
     """A class for sphere"""
 
-    title = 'Сфера'
+    title = "Сфера"
     params = {
-        'r': 'Радиус',
+        "r": "Радиус",
     }
     print_data = {
-        'diam': 'Диаметр',
+        "diam": "Диаметр",
     }
 
     def __init__(self, r) -> None:
@@ -312,14 +323,10 @@ class Sphere(Shape3D):
 class Parallelepiped(Shape3D):
     """A class for parallelepiped."""
 
-    title = 'Параллелепипед'
-    params = {
-        'a': 'Сторона A',
-        'b': 'Сторона B',
-        'h': 'Высота'
-    }
+    title = "Параллелепипед"
+    params = {"a": "Сторона A", "b": "Сторона B", "h": "Высота"}
     print_data = {
-        'diagonal': 'Диагональ',
+        "diagonal": "Диагональ",
     }
 
     def __init__(self, a, b, h) -> None:
@@ -347,9 +354,9 @@ class Parallelepiped(Shape3D):
 class Cube(Parallelepiped):
     """A class for cube."""
 
-    title = 'Куб'
+    title = "Куб"
     params = {
-        'a': 'Сторона A',
+        "a": "Сторона A",
     }
 
     def __init__(self, a) -> None:
@@ -359,11 +366,11 @@ class Cube(Parallelepiped):
 class Pyramid(Shape3D):
     """A class for pyramid."""
 
-    title = 'Пирамида'
+    title = "Пирамида"
     params = {
-        'a': 'Сторона',
-        'h': 'Высота',
-        'n': 'Количество сторон',
+        "a": "Сторона",
+        "h": "Высота",
+        "n": "Количество сторон",
     }
 
     def __init__(self, a, h, n) -> None:
@@ -376,7 +383,11 @@ class Pyramid(Shape3D):
     def surface_area(self) -> float:
         """The surface area of the pyramid."""
         segment = self.__a / (2 * tan(180 / self.__n))
-        return (self.__n * self.__a) * (segment + sqrt(pow(self.__h, 2) + pow(segment, 2))) / 2
+        return (
+            (self.__n * self.__a)
+            * (segment + sqrt(pow(self.__h, 2) + pow(segment, 2)))
+            / 2
+        )
 
     @rounding_decorator(2)
     def volume(self) -> float:
@@ -387,10 +398,10 @@ class Pyramid(Shape3D):
 class Cylinder(Shape3D):
     """A class for cylinder"""
 
-    title = 'Цилиндр'
+    title = "Цилиндр"
     params = {
-        'r': 'Радиус',
-        'h': 'Высота',
+        "r": "Радиус",
+        "h": "Высота",
     }
 
     def __init__(self, r, h) -> None:
@@ -411,10 +422,10 @@ class Cylinder(Shape3D):
 class Cone(Shape3D):
     """A class for cone."""
 
-    title = 'Конус'
+    title = "Конус"
     params = {
-        'r': 'Радиус',
-        'h': 'Длина стороны',
+        "r": "Радиус",
+        "h": "Длина стороны",
     }
 
     def __init__(self, r, h) -> None:
@@ -456,11 +467,11 @@ SHAPES = {
 
 def run() -> None:
     """Starting calculations."""
-    print('Варианты фигур\n')
-    shapes_list_text = ''
+    print("Варианты фигур\n")
+    shapes_list_text = ""
 
     for num, shape_class in SHAPES.items():
-        shapes_list_text += f'{num} - {shape_class.title}\n'
+        shapes_list_text += f"{num} - {shape_class.title}\n"
     print(shapes_list_text)
 
     correct_input = False
@@ -468,28 +479,28 @@ def run() -> None:
         try:
             shape_num = int(input("Введите номер фигуры: "))
             if shape_num not in SHAPES:
-                print('Неправильный номер фигуры')
-                print('Принимаются только цифры указанные выше')
+                print("Неправильный номер фигуры")
+                print("Принимаются только цифры указанные выше")
             else:
                 correct_input = True
         except (EOFError, KeyboardInterrupt):
-            print('Bye')
+            print("Bye")
             exit()
         except (KeyError, ValueError):
-            print('Принимаются только цифры указанные выше')
+            print("Принимаются только цифры указанные выше")
 
     shape_class = SHAPES[shape_num]
-    params_list_text = 'Вводите параметры через пробел:\n'
+    params_list_text = "Вводите параметры через пробел:\n"
 
     for name, description in shape_class.params.items():
-        params_list_text += f'{name} - {description}\n'
+        params_list_text += f"{name} - {description}\n"
 
     params_text = input(params_list_text)
     params = [float(i) for i in params_text.split()]
     shape_instance = shape_class(*params)
 
     for method_name, method_description in shape_instance.get_print_data().items():
-        print(f'{method_description}: {getattr(shape_instance, method_name)()}')
+        print(f"{method_description}: {getattr(shape_instance, method_name)()}")
 
 
 def main() -> None:
@@ -500,16 +511,16 @@ def main() -> None:
 
         correct_input = False
         while not correct_input:
-            end_response = input('Хотите продолжить вычисления (или выйти)? Y / N \n')
+            end_response = input("Хотите продолжить вычисления (или выйти)? Y / N \n")
 
-            if end_response.upper() not in {'Y', 'N'}:
-                print('Некорректный ввод')
+            if end_response.upper() not in {"Y", "N"}:
+                print("Некорректный ввод")
             else:
                 correct_input = True
 
-        if end_response.upper() == 'N':
+        if end_response.upper() == "N":
             break
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
