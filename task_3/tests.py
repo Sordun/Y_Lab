@@ -1,140 +1,119 @@
 import unittest
-from calculator import (
-    Circle,
-    Rectangle,
-    Square,
-    Triangle,
-    Rhombus,
-    Trapezoid,
-    Sphere,
-    Parallelepiped,
-    Cube,
-    Pyramid,
-    Cylinder,
-    Cone,
-)
+from calculator import Circle, Rectangle, Square, Triangle, Rhombus, Trapezoid, PrintResult
 
 
-class ErrorsTest(unittest.TestCase):
-    @staticmethod
-    def test_circle_perimeter():
-        circle = Circle(5)
-        assert circle.perimeter() == 31.42
+class TestCircle(unittest.TestCase):
+    radius = 5
 
-    @staticmethod
-    def test_circle_area():
-        circle = Circle(5)
-        assert circle.area() == 78.54
+    def setUp(self):
+        self.test_circle = Circle(self.radius)
 
-    @staticmethod
-    def test_rectangle_perimeter():
-        rectangle = Rectangle(20, 30)
-        assert rectangle.perimeter() == 100
+    def test_area_calculation(self):
+        area = self.test_circle.get_area()
+        self.assertEqual(PrintResult.round_result(area), 78.54)
 
-    @staticmethod
-    def test_rectangle_area():
-        rectangle = Rectangle(20, 30)
-        assert rectangle.area() == 600
+    def test_perimeter_calculation(self):
+        perimeter = self.test_circle.get_perimeter()
+        self.assertEqual(PrintResult.round_result(perimeter), 31.42)
 
-    @staticmethod
-    def test_square_perimeter():
-        square = Square(25)
-        assert square.perimeter() == 100
 
-    @staticmethod
-    def test_square_area():
-        square = Square(25)
-        assert square.area() == 625
+class TestRectangle(unittest.TestCase):
+    x, y = 20, 30
 
-    @staticmethod
-    def test_triangle_perimeter():
-        triangle = Triangle(20, 30, 40)
-        assert triangle.perimeter() == 90
+    def setUp(self):
+        self.test_rectangle = Rectangle(self.x, self.y)
 
-    @staticmethod
-    def test_triangle_area():
-        triangle = Triangle(20, 30, 40)
-        assert triangle.area() == 290.47
+    def test_area_calculation(self):
+        area = self.test_rectangle.get_area()
+        self.assertEqual(PrintResult.round_result(area), 600)
 
-    @staticmethod
-    def test_rhombus_perimeter():
-        rhombus = Rhombus(20, 30)
-        assert rhombus.perimeter() == 72.11
+    def test_perimeter_calculation(self):
+        perimeter = self.test_rectangle.get_perimeter()
+        self.assertEqual(PrintResult.round_result(perimeter), 100)
 
-    @staticmethod
-    def test_rhombus_area():
-        rhombus = Rhombus(20, 30)
-        assert rhombus.area() == 300
 
-    @staticmethod
-    def test_trapezoid_perimeter():
-        trapezoid = Trapezoid(50, 30, 20, 10, 15)
-        assert trapezoid.perimeter() == 110
+class TestSquare(unittest.TestCase):
+    x = 25
 
-    @staticmethod
-    def test_trapezoid_area():
-        trapezoid = Trapezoid(50, 30, 20, 10, 15)
-        assert trapezoid.area() == 600
+    def setUp(self):
+        self.test_square = Square(self.x)
 
-    @staticmethod
-    def test_sphere_surface_area():
-        sphere = Sphere(10)
-        assert sphere.surface_area() == 1256.64
+    def test_area_calculation(self):
+        area = self.test_square.get_area()
+        self.assertEqual(PrintResult.round_result(area), 625)
 
-    @staticmethod
-    def test_sphere_volume():
-        sphere = Sphere(10)
-        assert sphere.volume() == 4188.79
+    def test_perimeter_calculation(self):
+        perimeter = self.test_square.get_perimeter()
+        self.assertEqual(PrintResult.round_result(perimeter), 100)
 
-    @staticmethod
-    def test_parallelepiped_surface_area():
-        parallelepiped = Parallelepiped(20, 30, 10)
-        assert parallelepiped.surface_area() == 2200
 
-    @staticmethod
-    def test_parallelepiped_volume():
-        parallelepiped = Parallelepiped(20, 30, 10)
-        assert parallelepiped.volume() == 6000
+class TestRhombus(unittest.TestCase):
+    d1, d2 = 20, 30
 
-    @staticmethod
-    def test_cube_surface_area():
-        cube = Cube(20)
-        assert cube.surface_area() == 2400
+    def setUp(self):
+        self.test_diamond = Rhombus(self.d1, self.d2)
 
-    @staticmethod
-    def test_cube_volume():
-        cube = Cube(20)
-        assert cube.volume() == 8000
+    def test_area_calculation(self):
+        area = self.test_diamond.get_area()
+        self.assertEqual(PrintResult.round_result(area), 300)
 
-    @staticmethod
-    def test_pyramid_surface_area():
-        pyramid = Pyramid(30, 20, 5)
-        assert pyramid.surface_area() == 1652.16
+    def test_perimeter_calculation(self):
+        perimeter = self.test_diamond.get_perimeter()
+        self.assertEqual(PrintResult.round_result(perimeter), 72.11)
 
-    @staticmethod
-    def test_pyramid_volume():
-        pyramid = Pyramid(30, 20, 5)
-        assert pyramid.volume() == 967.68
 
-    @staticmethod
-    def test_cylinder_surface_area():
-        cylinder = Cylinder(10, 20)
-        assert cylinder.surface_area() == 1884.96
+class TestTrapezoid(unittest.TestCase):
+    base = 8
+    left_base_angle = 95
+    right_base_angle = 55
+    height = 2
 
-    @staticmethod
-    def test_cylinder_volume():
-        cylinder = Cylinder(10, 20)
-        assert cylinder.volume() == 6283.19
+    def setUp(self):
+        self.test_trapeze = Trapezoid(self.base, self.left_base_angle, self.right_base_angle, self.height)
 
-    @staticmethod
-    def test_cone_surface_area():
-        cone = Cone(10, 20)
-        assert cone.surface_area() == 942.48
+    def test_right_side_calculation(self):
+        right_side = self.test_trapeze.get_right_leg()
+        self.assertEqual(PrintResult.round_result(right_side), 2.44)
 
-    @staticmethod
-    def test_cone_volume():
-        cone = Cone(10, 20)
-        assert cone.volume() == 1813.75
+    def test_left_side_calculation(self):
+        left_side = self.test_trapeze.get_left_leg()
+        self.assertEqual(PrintResult.round_result(left_side), 2.01)
+
+    def test_upper_side_calculation(self):
+        upper_side = self.test_trapeze.get_upper_base_side()
+        self.assertEqual(PrintResult.round_result(upper_side), 6.77)
+
+    def test_height_calculation(self):
+        height = self.test_trapeze.get_height()
+        self.assertEqual(PrintResult.round_result(height), 2)
+
+    def test_area_calculation(self):
+        area = self.test_trapeze.get_area()
+        self.assertEqual(PrintResult.round_result(area), 14.77)
+
+    def test_perimeter_calculation(self):
+        perimeter = self.test_trapeze.get_perimeter()
+        self.assertEqual(PrintResult.round_result(perimeter), 19.22)
+
+
+class TestTriangle(unittest.TestCase):
+    x, y, z = 3, 5, 5
+
+    def setUp(self):
+        self.test_triangle = Triangle(self.x, self.y, self.z)
+
+    def test_area_calculation(self):
+        area = self.test_triangle.get_area()
+        self.assertEqual(PrintResult.round_result(area), 7.15)
+
+    def test_perimeter_calculation(self):
+        perimeter = self.test_triangle.get_perimeter()
+        self.assertEqual(PrintResult.round_result(perimeter), 13)
+
+    def test_height_calculation(self):
+        heights = self.test_triangle.get_height()
+        heights = [PrintResult.round_result(height) for height in heights]
+        self.assertEqual(heights, [4.77, 2.86, 2.86])
 
 
 if __name__ == "__main__":

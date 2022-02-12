@@ -1,526 +1,390 @@
-import abc
-import functools
-from math import pi, sqrt, tan
+import math
+from abc import ABC, abstractmethod
 
 
-def rounding_decorator(decimal_places: int):
-    """
-    Decorator for rounding the result
-    Arguments:
-        decimal_places - how many characters to round
-    """
-
-    def decorator_wrapper(function):
-        @functools.wraps(function)
-        def wrapper(*args, **kwargs):
-            result = function(*args, **kwargs)
-            return round(result, decimal_places)
-
-        return wrapper
-
-    return decorator_wrapper
+class Shape(ABC):
+    @abstractmethod
+    def get_area(self) -> None:
+        pass
 
 
-class Shape:
-    """
-    An abstract class for geometric figures.
-    """
-
-    @classmethod
-    def get_print_data(cls) -> dict:
-        parent_data = {}
-        if not cls is Shape:
-            parent_data = cls.__bases__[0].get_print_data()
-
-        if hasattr(cls, "print_data"):
-            result = {}
-            result.update(cls.print_data)
-            result.update(parent_data)
-            return result
-
-        return parent_data
+class HeightShape(Shape, ABC):
+    @abstractmethod
+    def get_height(self) -> None:
+        pass
 
 
-class Shape2D(Shape):
+class PrintResult:
+    @staticmethod
+    def round_result(value: float, decimal_places: int = 2) -> float:
+        """
+        :param value: The value to be rounded
+        :param decimal_places: The precision after the decimal point the value should be rounded to
+        :return: Number rounded to decimal_places precision
+        """
+        return round(value, decimal_places)
+
+
+class Shape2D(Shape, ABC):
     """
     Flat figure.
     """
 
-    print_data = {
-        "perimeter": "Периметр",
-        "area": "Площадь",
-    }
-
-    @abc.abstractmethod
-    def perimeter(self) -> float:
-        """Shape perimeter."""
-        pass
-
-    @abc.abstractmethod
-    def area(self) -> float:
-        """Figure area."""
+    @abstractmethod
+    def get_perimeter(self) -> None:
         pass
 
 
-class Circle(Shape2D):
+class Circle(Shape2D, ABC):
     """A class for circle."""
 
     title = "Круг"
-    params = {
-        "r": "Радиус",
-    }
 
-    print_data = {
-        "diam": "Диаметр",
-        "area": "Площадь",
-        "perimeter": "Периметр",
-    }
-
-    def __init__(self, r) -> None:
+    def __init__(self, radius: float) -> None:
+        """
+        :param radius: Radius of the circle
+        """
         super().__init__()
-        self.__r = r
+        self.radius = radius
 
-    @rounding_decorator(2)
-    def diam(self) -> float:
-        """Circle diameter."""
-        return self.__r * 2
-
-    @rounding_decorator(2)
-    def area(self) -> float:
+    def get_area(self) -> float:
         """Calculate circle area."""
-        return pi * self.__r * self.__r
+        return math.pi * (self.radius**2)
 
-    @rounding_decorator(2)
-    def perimeter(self) -> float:
+    def get_perimeter(self) -> float:
         """Calculate circumference."""
-        return 2 * pi * self.__r
+        return 2 * math.pi * self.radius
 
 
 class Rectangle(Shape2D):
     """A class for rectangle."""
 
     title = "Прямоугольник"
-    params = {
-        "a": "сторона A",
-        "b": "сторона B",
-    }
-    print_data = {
-        "diagonal": "Диагональ",
-    }
 
     def __init__(self, a, b) -> None:
         super().__init__()
-        self.__a, self.__b = a, b
+        self.a, self.b = a, b
 
-    @rounding_decorator(2)
-    def perimeter(self) -> float:
+    def get_perimeter(self) -> float:
         """Perimeter of a rectangle."""
-        return (self.__a + self.__b) * 2
+        return (self.a + self.b) * 2
 
-    @rounding_decorator(2)
-    def area(self) -> float:
+    def get_area(self) -> float:
         """The area of the rectangle."""
-        return self.__a * self.__b
-
-    @rounding_decorator(2)
-    def diagonal(self) -> float:
-        """Diagonal of the rectangle."""
-        return sqrt(pow(self.__a, 2) + pow(self.__b, 2))
+        return self.a * self.b
 
 
 class Square(Rectangle):
     """A class for square."""
 
     title = "Квадрат"
-    params = {
-        "a": "сторона A",
-    }
 
     def __init__(self, a) -> None:
         super().__init__(a, a)
 
 
-class Triangle(Shape2D):
+class Triangle(Shape2D, HeightShape):
     """A class for triangle."""
 
     title = "Треугольник"
-    params = {
-        "a": "сторона A",
-        "b": "сторона B",
-        "c": "сторона C",
-    }
-    print_data = {
-        "radius": "Радиус вписанной окружности",
-    }
 
-    def __init__(self, a, b, c) -> None:
+    def __init__(self, a: float, b: float, c: float) -> None:
+        """
+
+        :param a: Side x of the triangle
+        :param b: Side y of the triangle
+        :param c: Side z of the triangle
+        """
         super().__init__()
-        self.__a = a
-        self.__b = b
-        self.__c = c
+        self.a = a
+        self.b = b
+        self.c = c
 
-    @rounding_decorator(2)
-    def perimeter(self) -> float:
-        """Perimeter of a triangle."""
-        return self.__a + self.__b + self.__c
+    def get_area(self) -> float:
+        """
+        :return: Area of the triangle
+        """
+        half_perimeter = self.get_perimeter() / 2
+        return math.sqrt(
+            half_perimeter * (half_perimeter - self.a) * (half_perimeter - self.b) * (half_perimeter - self.c)
+        )
 
-    @rounding_decorator(2)
-    def area(self) -> float:
-        """Area of a triangle."""
-        p = self.perimeter() / 2
-        return sqrt(p * (p - self.__a) * (p - self.__b) * (p - self.__c))
+    def get_perimeter(self) -> float:
+        """
+        :return: Perimeter of the triangle
+        """
+        return self.a + self.b + self.c
 
-    @rounding_decorator(2)
-    def radius(self) -> float:
-        """The radius of the inscribed circle."""
-        p = self.perimeter()
-        return sqrt(((p - self.__a) * (p - self.__b) * (p - self.__c)) / p)
+    def get_height(self) -> tuple[float, float, float]:
+        """
+        :return: Height of the triangle
+        """
+        two_areas = 2 * self.get_area()
+        return two_areas / self.a, two_areas / self.b, two_areas / self.c
 
 
-class Rhombus(Shape2D):
+class Rhombus(Shape2D, HeightShape):
     """A class for rhombus."""
 
     title = "Ромб"
-    params = {
-        "d1": "Диагональ 1",
-        "d2": "Диагональ 2",
-    }
 
-    def __init__(self, d1, d2) -> None:
+    def __init__(self, d1: float, d2: float) -> None:
         super().__init__()
-        self.__d1 = d1
-        self.__d2 = d2
+        self.d1 = d1
+        self.d2 = d2
 
-    @rounding_decorator(2)
-    def perimeter(self) -> float:
-        """The perimeter of the rhombus."""
-        return sqrt(self.__d1 ** 2 + self.__d2 ** 2) * 2
+    def get_perimeter(self) -> float:
+        """
+        :return: Perimeter of the diamond
+        """
+        return 4 * math.sqrt((self.d1 / 2) ** 2 + (self.d2 / 2) ** 2)
 
-    @rounding_decorator(2)
-    def area(self) -> float:
-        """The area of the rhombus."""
-        return (self.__d1 * self.__d2) / 2
+    def get_area(self) -> float:
+        """
+        :return: Area of the diamond
+        """
+        return 0.5 * self.d1 * self.d2
+
+    def get_height(self) -> float:
+        """
+        :return: Height of the diamond
+        """
+        return 2 * (self.d1 * self.d2) / self.get_perimeter()
 
 
-class Trapezoid(Shape2D):
+class Trapezoid(Shape2D, HeightShape):
     """A class for trapezoid."""
 
     title = "Трапеция"
-    params = {
-        "a": "Сторона A (нижняя)",
-        "b": "Сторона B (верхняя)",
-        "c": "Сторона C",
-        "d": "Сторона D",
-        "h": "Высота H",
-    }
-    print_data = {
-        "diagonals": "Диагонали",
-    }
 
-    def __init__(self, a, b, c, d, h) -> None:
+    def __init__(
+        self,
+        base: float,
+        left_base_angle: float,
+        right_base_angle: float,
+        height: float,
+    ) -> None:
+        """
+        :param base: Length of longer base side of the trapeze
+        :param left_base_angle: Right base angle
+        :param right_base_angle: Left base angle
+        :param height: Height of the trapeze
+        """
         super().__init__()
-        self.__a = a
-        self.__b = b
-        self.__c = c
-        self.__d = d
-        self.__h = h
+        self.base = base
+        self.left_base_angle = left_base_angle
+        self.right_base_angle = right_base_angle
+        self.height = height
+        self.right_side = self.get_right_leg()
+        self.left_side = self.get_left_leg()
+        self.upper_side = self.get_upper_base_side()
 
-    @rounding_decorator(2)
-    def perimeter(self) -> float:
-        """Calculate trapezoid perimeter."""
-        return self.__a + self.__b + self.__c + self.__d
+    def get_right_leg(self) -> float:
+        """
+        :return: Right lateral side of the trapezoid
+        """
+        return self.height / math.sin(math.radians(self.right_base_angle))
 
-    @rounding_decorator(2)
-    def area(self) -> float:
-        """Calculate trapezoid area."""
-        return (self.__a + self.__b) / 2 * self.__h
+    def get_left_leg(self) -> float:
+        """
+        :return: Left lateral side of the trapezoid
+        """
+        return self.height / math.sin(math.radians(self.left_base_angle))
 
-    @rounding_decorator(2)
-    def get_d1(self) -> float:
-        """First diagonal."""
-        try:
-            return sqrt(
-                pow(self.__d, 2)
-                + self.__a * self.__b
-                - self.__a
-                * (pow(self.__d, 2) - pow(self.__c, 2))
-                / (self.__a - self.__b)
-            )
-        except ValueError:
-            return 0
+    def get_upper_base_side(self) -> float:
+        """
+        :return: Shorter base of the trapezoid
+        """
+        return self.base - self.height * (
+            1 / math.tan(math.radians(self.left_base_angle)) + 1 / math.tan(math.radians(self.right_base_angle))
+        )
 
-    @rounding_decorator(2)
-    def get_d2(self) -> float:
-        """Second diagonal."""
-        try:
-            return sqrt(
-                pow(self.__c, 2)
-                + self.__a * self.__b
-                - self.__a
-                * (pow(self.__c, 2) - pow(self.__d, 2))
-                / (self.__a - self.__b)
-            )
-        except ValueError:
-            return 0
+    def get_height(self) -> float:
+        """
+        :return: Height of the trapezoid
+        """
+        return self.height
 
-    def diagonals(self) -> tuple:
-        """The diagonals of the trapezoid."""
-        return self.get_d1(), self.get_d2()
+    def get_area(self) -> float:
+        """
+        :return: Area of the trapezoid
+        """
+        return (self.base + self.upper_side) / 2 * self.height
+
+    def get_perimeter(self) -> float:
+        """
+        :return: Perimeter of the trapezoid
+        """
+        return self.base + self.right_side + self.left_side + self.upper_side
 
 
-class Shape3D(Shape):
+class Shape3D(Shape, ABC):
     """
     3-D shape prototype.
     """
 
-    print_data = {
-        "surface_area": "Площадь поверхности",
-        "volume": "Объем",
-    }
-
-    @abc.abstractmethod
-    def surface_area(self) -> float:
-        """The surface area of the figure."""
-        pass
-
-    @abc.abstractmethod
-    def volume(self) -> float:
-        """The volume of the figure."""
+    @abstractmethod
+    def get_volume(self) -> None:
         pass
 
 
-class Sphere(Shape3D):
+class Sphere(Shape3D, ABC):
     """A class for sphere"""
 
     title = "Сфера"
-    params = {
-        "r": "Радиус",
-    }
-    print_data = {
-        "diam": "Диаметр",
-    }
 
-    def __init__(self, r) -> None:
+    def __init__(self, r: float) -> None:
         super().__init__()
-        self.__r = r
+        self.r = r
 
-    @rounding_decorator(2)
-    def surface_area(self) -> float:
-        """Surface area of a sphere."""
-        return 4 * pi * self.__r ** 2
+    def get_area(self) -> float:
+        """
+        :return: Area of the sphere surface
+        """
+        return 4 * math.pi * self.r**2
 
-    @rounding_decorator(2)
-    def volume(self) -> float:
-        """The volume of the sphere."""
-        return 4 * pi * self.__r ** 3 / 3
+    def get_volume(self) -> float:
+        """
 
-    @rounding_decorator(2)
-    def diam(self) -> float:
-        """The diameter of the sphere."""
-        return self.__r * 2
+        :return: Volume of the sphere
+        """
+        return 4 / 3 * math.pi * self.r**3
 
 
 class Parallelepiped(Shape3D):
     """A class for parallelepiped."""
 
     title = "Параллелепипед"
-    params = {"a": "Сторона A", "b": "Сторона B", "h": "Высота"}
-    print_data = {
-        "diagonal": "Диагональ",
-    }
 
-    def __init__(self, a, b, h) -> None:
+    def __init__(self, a: float, b: float, h: float) -> None:
         super().__init__()
-        self.__a = a
-        self.__b = b
-        self.__h = h
+        self.a = a
+        self.b = b
+        self.h = h
+        self.s = [Rectangle(a, b), Rectangle(b, h), Rectangle(a, h)]
 
-    @rounding_decorator(2)
-    def surface_area(self) -> float:
-        """Surface area of a parallelepiped."""
-        return 2 * (self.__a * self.__b + self.__a * self.__h + self.__b * self.__h)
+    def get_area(self) -> float:
+        """
+        :return: Area of Rectangular Parallelepiped
+        """
+        sides_areas = [side.get_area() for side in self.s]
+        return sum(sides_areas) * 2
 
-    @rounding_decorator(2)
-    def volume(self) -> float:
-        """The volume of the parallelepiped."""
-        return self.__a * self.__b * self.__h
-
-    @rounding_decorator(2)
-    def diagonal(self) -> float:
-        """Diagonal of a parallelepiped."""
-        return sqrt(pow(self.__a, 2) + pow(self.__b, 2) + pow(self.__h, 2))
+    def get_volume(self) -> float:
+        """
+        :return: Volume of Rectangular Parallelepiped
+        """
+        return self.a * self.b * self.h
 
 
 class Cube(Parallelepiped):
     """A class for cube."""
 
     title = "Куб"
-    params = {
-        "a": "Сторона A",
-    }
 
-    def __init__(self, a) -> None:
+    def __init__(self, a: float) -> None:
         super().__init__(a, a, a)
 
+    @property
+    def x(self):
+        return self.a
 
-class Pyramid(Shape3D):
+
+class Pyramid(Shape3D, HeightShape):
     """A class for pyramid."""
 
     title = "Пирамида"
-    params = {
-        "a": "Сторона",
-        "h": "Высота",
-        "n": "Количество сторон",
-    }
 
-    def __init__(self, a, h, n) -> None:
+    def __init__(self, x: float, h: float) -> None:
         super().__init__()
-        self.__a = a
-        self.__h = h
-        self.__n = n
+        self.square = Square(x)
+        self.h = h
 
-    @rounding_decorator(2)
-    def surface_area(self) -> float:
-        """The surface area of the pyramid."""
-        segment = self.__a / (2 * tan(180 / self.__n))
-        return (
-            (self.__n * self.__a)
-            * (segment + sqrt(pow(self.__h, 2) + pow(segment, 2)))
-            / 2
-        )
+    @property
+    def x(self):
+        return self.square.a
 
-    @rounding_decorator(2)
-    def volume(self) -> float:
-        """The volume of the pyramid."""
-        return (self.__n * self.__a ** 2 * self.__h) / (12 * tan(180 / self.__n))
+    def get_area(self) -> float:
+        """
+        :return: Area of the pyramid
+        """
+        triangle_height = math.sqrt(self.h**2 + (1 / 4) * self.square.a**2)
+        side_area = 2 * self.square.a * triangle_height
+        return self.square.get_area() + side_area
+
+    def get_volume(self) -> float:
+        """
+        :return: Volume of the pyramid
+        """
+        return (1 / 3) * self.square.get_area() * self.h
+
+    def get_height(self) -> float:
+        """
+        :return: Height of the pyramid
+        """
+        return self.h
 
 
-class Cylinder(Shape3D):
+class Cylinder(Shape3D, HeightShape):
     """A class for cylinder"""
 
     title = "Цилиндр"
-    params = {
-        "r": "Радиус",
-        "h": "Высота",
-    }
 
-    def __init__(self, r, h) -> None:
+    def __init__(self, radius: float, h: float) -> None:
+        """
+        :param radius: Radius of the cylinder
+        :param h: Height of the cylinder
+        """
         super().__init__()
-        self.__r, self.__h = r, h
+        self.circle = Circle(radius)
+        self.h = h
 
-    @rounding_decorator(2)
-    def surface_area(self) -> float:
-        """Cylinder surface area."""
-        return 2 * pi * self.__r * (self.__r + self.__h)
+    def get_area(self) -> float:
+        """
+        :return: Area of the cylinder
+        """
+        return self.circle.get_perimeter() * self.h + 2 * self.circle.get_area()
 
-    @rounding_decorator(2)
-    def volume(self) -> float:
-        """Cylinder volume."""
-        return pi * self.__r ** 2 * self.__h
+    def get_volume(self) -> float:
+        """
+        :return: Volume of the cylinder
+        """
+        return self.circle.get_area() * self.h
+
+    def get_height(self) -> float:
+        """
+        :return: Height of the cylinder
+        """
+        return self.h
+
+    @property
+    def radius(self):
+        return self.circle.radius
 
 
-class Cone(Shape3D):
+class Cone(Cylinder):
     """A class for cone."""
 
     title = "Конус"
-    params = {
-        "r": "Радиус",
-        "h": "Длина стороны",
-    }
 
-    def __init__(self, r, h) -> None:
-        super().__init__()
-        self.__r, self.__h = r, h
+    def __init__(self, radius: float, h: float) -> None:
+        super().__init__(radius, h)
 
-    @rounding_decorator(2)
-    def surface_height(self) -> float:
-        """Cone height."""
-        return sqrt(pow(self.__h, 2) - pow(self.__r, 2))
+    def get_area(self) -> float:
+        """
+        :return: Area of right circular cone
+        """
+        side_area = math.pi * self.circle.radius * self.get_cone_generator()
+        return self.circle.get_area() + side_area
 
-    @rounding_decorator(2)
-    def surface_area(self) -> float:
-        """Cone surface area."""
-        return pi * self.__r * (self.__r + self.__h)
+    def get_volume(self) -> float:
+        """
+        :return: Volume of right circular cone
+        """
+        return (1 / 3) * self.circle.get_area() * self.h
 
-    @rounding_decorator(2)
-    def volume(self) -> float:
-        """The volume of the cone."""
-        v = self.surface_height()
-        return pi * self.__r ** 2 * v / 3
-
-
-SHAPES = {
-    1: Circle,
-    2: Rectangle,
-    3: Square,
-    4: Triangle,
-    5: Rhombus,
-    6: Trapezoid,
-    7: Sphere,
-    8: Cube,
-    9: Parallelepiped,
-    10: Pyramid,
-    11: Cylinder,
-    12: Cone,
-}
-
-
-def run() -> None:
-    """Starting calculations."""
-    print("Варианты фигур\n")
-    shapes_list_text = ""
-
-    for num, shape_class in SHAPES.items():
-        shapes_list_text += f"{num} - {shape_class.title}\n"
-    print(shapes_list_text)
-
-    correct_input = False
-    while not correct_input:
-        try:
-            shape_num = int(input("Введите номер фигуры: "))
-            if shape_num not in SHAPES:
-                print("Неправильный номер фигуры")
-                print("Принимаются только цифры указанные выше")
-            else:
-                correct_input = True
-        except (EOFError, KeyboardInterrupt):
-            print("Bye")
-            exit()
-        except (KeyError, ValueError):
-            print("Принимаются только цифры указанные выше")
-
-    shape_class = SHAPES[shape_num]
-    params_list_text = "Вводите параметры через пробел:\n"
-
-    for name, description in shape_class.params.items():
-        params_list_text += f"{name} - {description}\n"
-
-    params_text = input(params_list_text)
-    params = [float(i) for i in params_text.split()]
-    shape_instance = shape_class(*params)
-
-    for method_name, method_description in shape_instance.get_print_data().items():
-        print(f"{method_description}: {getattr(shape_instance, method_name)()}")
-
-
-def main() -> None:
-    end_response = None
-
-    while True:
-        run()
-
-        correct_input = False
-        while not correct_input:
-            end_response = input("Хотите продолжить вычисления (или выйти)? Y / N \n")
-
-            if end_response.upper() not in {"Y", "N"}:
-                print("Некорректный ввод")
-            else:
-                correct_input = True
-
-        if end_response.upper() == "N":
-            break
-
-
-if __name__ == "__main__":
-    main()
+    def get_cone_generator(self) -> float:
+        """
+        :return: Generator line of right circular cone
+        """
+        return math.sqrt(self.circle.radius**2 + self.h**2)
