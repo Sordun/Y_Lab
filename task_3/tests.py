@@ -83,10 +83,6 @@ class TestTrapezoid(unittest.TestCase):
         upper_side = self.test_trapeze.get_upper_base_side()
         self.assertEqual(PrintResult.round_result(upper_side), 6.77)
 
-    def test_height_calculation(self):
-        height = self.test_trapeze.get_height()
-        self.assertEqual(PrintResult.round_result(height), 2)
-
     def test_area_calculation(self):
         area = self.test_trapeze.get_area()
         self.assertEqual(PrintResult.round_result(area), 14.77)
