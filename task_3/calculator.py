@@ -25,7 +25,7 @@ class PrintResult:
         return round(value, decimal_places)
 
 
-class Shape2D(Shape, ABC):
+class Shape2D(Shape):
     """
     Flat figure.
     """
@@ -35,7 +35,7 @@ class Shape2D(Shape, ABC):
         pass
 
 
-class Circle(Shape2D, ABC):
+class Circle(Shape2D):
     """A class for circle."""
 
     title = "Круг"
@@ -152,7 +152,7 @@ class Rhombus(Shape2D, HeightShape):
         return 2 * (self.d1 * self.d2) / self.get_perimeter()
 
 
-class Trapezoid(Shape2D, HeightShape):
+class Trapezoid(Shape2D):
     """A class for trapezoid."""
 
     title = "Трапеция"
@@ -199,12 +199,6 @@ class Trapezoid(Shape2D, HeightShape):
             1 / math.tan(math.radians(self.left_base_angle)) + 1 / math.tan(math.radians(self.right_base_angle))
         )
 
-    def get_height(self) -> float:
-        """
-        :return: Height of the trapezoid
-        """
-        return self.height
-
     def get_area(self) -> float:
         """
         :return: Area of the trapezoid
@@ -218,7 +212,7 @@ class Trapezoid(Shape2D, HeightShape):
         return self.base + self.right_side + self.left_side + self.upper_side
 
 
-class Shape3D(Shape, ABC):
+class Shape3D(Shape):
     """
     3-D shape prototype.
     """
@@ -228,7 +222,7 @@ class Shape3D(Shape, ABC):
         pass
 
 
-class Sphere(Shape3D, ABC):
+class Sphere(Shape3D):
     """A class for sphere"""
 
     title = "Сфера"
@@ -290,7 +284,7 @@ class Cube(Parallelepiped):
         return self.a
 
 
-class Pyramid(Shape3D, HeightShape):
+class Pyramid(Shape3D):
     """A class for pyramid."""
 
     title = "Пирамида"
@@ -318,14 +312,8 @@ class Pyramid(Shape3D, HeightShape):
         """
         return (1 / 3) * self.square.get_area() * self.h
 
-    def get_height(self) -> float:
-        """
-        :return: Height of the pyramid
-        """
-        return self.h
 
-
-class Cylinder(Shape3D, HeightShape):
+class Cylinder(Shape3D):
     """A class for cylinder"""
 
     title = "Цилиндр"
@@ -350,12 +338,6 @@ class Cylinder(Shape3D, HeightShape):
         :return: Volume of the cylinder
         """
         return self.circle.get_area() * self.h
-
-    def get_height(self) -> float:
-        """
-        :return: Height of the cylinder
-        """
-        return self.h
 
     @property
     def radius(self):
