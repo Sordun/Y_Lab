@@ -64,32 +64,32 @@ class TestRhombus(unittest.TestCase):
 
 class TestTrapezoid(unittest.TestCase):
     base = 8
-    left_base_angle = 95
+    left_base_angle = 80
     right_base_angle = 55
-    height = 2
+    height = 5
 
     def setUp(self):
         self.test_trapeze = Trapezoid(self.base, self.left_base_angle, self.right_base_angle, self.height)
 
     def test_right_side_calculation(self):
         right_side = self.test_trapeze.get_right_leg()
-        self.assertEqual(PrintResult.round_result(right_side), 2.44)
+        self.assertEqual(PrintResult.round_result(right_side), 6.1)
 
     def test_left_side_calculation(self):
         left_side = self.test_trapeze.get_left_leg()
-        self.assertEqual(PrintResult.round_result(left_side), 2.01)
+        self.assertEqual(PrintResult.round_result(left_side), 5.08)
 
     def test_upper_side_calculation(self):
         upper_side = self.test_trapeze.get_upper_base_side()
-        self.assertEqual(PrintResult.round_result(upper_side), 6.77)
+        self.assertEqual(PrintResult.round_result(upper_side), 3.62)
 
     def test_area_calculation(self):
         area = self.test_trapeze.get_area()
-        self.assertEqual(PrintResult.round_result(area), 14.77)
+        self.assertEqual(PrintResult.round_result(area), 29.04)
 
     def test_perimeter_calculation(self):
         perimeter = self.test_trapeze.get_perimeter()
-        self.assertEqual(PrintResult.round_result(perimeter), 19.22)
+        self.assertEqual(PrintResult.round_result(perimeter), 22.8)
 
 
 class TestTriangle(unittest.TestCase):

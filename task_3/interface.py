@@ -1,5 +1,6 @@
 import inspect
 import tkinter as tk
+from tkinter import messagebox
 from collections.abc import Iterable
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -32,7 +33,7 @@ class WelcomeWindow:
             "Круг": ShapeWindow(self, Circle(2), Drawer2D.draw_circle).show,
             "Прямоугольник": ShapeWindow(self, Rectangle(2, 3), Drawer2D.draw_rect).show,
             "Квадрат": ShapeWindow(self, Square(2), Drawer2D.draw_quad).show,
-            "Трапеция": ShapeWindow(self, Trapezoid(8, 95, 55, 2), Drawer2D.draw_trapezoid).show,
+            "Трапеция": ShapeWindow(self, Trapezoid(8, 80, 55, 5), Drawer2D.draw_trapezoid).show,
             "Ромб": ShapeWindow(self, Rhombus(2, 4), Drawer2D.draw_rhombus).show,
             "Треугольник": ShapeWindow(self, Triangle(3, 5, 5), Drawer2D.draw_triangle).show,
         }
@@ -129,10 +130,13 @@ class ShapeWindow:
         refresh_button.grid(row=row + 1, column=0, columnspan=2)
 
     def refresh(self):
-        args = []
-        for field in self.fields_entries:
-            new_value = float(self.fields_entries[field].get())
-            args.append(new_value)
-        new_shape = (type(self.shape))(*args)
-        ShapeWindow(self.main_window, new_shape, self.draw_method).show()
-        self.window.destroy()
+        try:
+            args = []
+            for field in self.fields_entries:
+                new_value = float(self.fields_entries[field].get())
+                args.append(new_value)
+            new_shape = (type(self.shape))(*args)
+            ShapeWindow(self.main_window, new_shape, self.draw_method).show()
+            self.window.destroy()
+        except ValueError:
+            messagebox.showinfo("Произошла ошибка", "Введены некорректные данные")

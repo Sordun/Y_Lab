@@ -8,7 +8,7 @@ class Shape(ABC):
         pass
 
 
-class HeightShape(Shape, ABC):
+class HeightShape(Shape):
     @abstractmethod
     def get_height(self) -> None:
         pass
@@ -46,6 +46,8 @@ class Circle(Shape2D):
         """
         super().__init__()
         self.radius = radius
+        if self.radius <= 0:
+            raise ValueError
 
     def get_area(self) -> float:
         """Calculate circle area."""
@@ -64,6 +66,8 @@ class Rectangle(Shape2D):
     def __init__(self, a, b) -> None:
         super().__init__()
         self.a, self.b = a, b
+        if self.a <= 0 or self.b <= 0:
+            raise ValueError
 
     def get_perimeter(self) -> float:
         """Perimeter of a rectangle."""
@@ -90,7 +94,6 @@ class Triangle(Shape2D, HeightShape):
 
     def __init__(self, a: float, b: float, c: float) -> None:
         """
-
         :param a: Side x of the triangle
         :param b: Side y of the triangle
         :param c: Side z of the triangle
@@ -99,6 +102,10 @@ class Triangle(Shape2D, HeightShape):
         self.a = a
         self.b = b
         self.c = c
+        if self.a <= 0 or self.b <= 0 or self.c <= 0:
+            raise ValueError
+        if self.c >= self.b + self.a:
+            raise ValueError
 
     def get_area(self) -> float:
         """
@@ -132,6 +139,8 @@ class Rhombus(Shape2D, HeightShape):
         super().__init__()
         self.d1 = d1
         self.d2 = d2
+        if self.d1 <= 0 or self.d2 <= 0:
+            raise ValueError
 
     def get_perimeter(self) -> float:
         """
@@ -178,6 +187,10 @@ class Trapezoid(Shape2D):
         self.right_side = self.get_right_leg()
         self.left_side = self.get_left_leg()
         self.upper_side = self.get_upper_base_side()
+        if self.base <= 0 or self.left_base_angle <= 0 or self.right_base_angle <= 0 or self.height <= 0:
+            raise ValueError
+        if self.left_base_angle >= 90 or self.right_base_angle >= 90 or self.left_base_angle == self.right_base_angle:
+            raise ValueError
 
     def get_right_leg(self) -> float:
         """
@@ -230,6 +243,8 @@ class Sphere(Shape3D):
     def __init__(self, r: float) -> None:
         super().__init__()
         self.r = r
+        if self.r <= 0:
+            raise ValueError
 
     def get_area(self) -> float:
         """
@@ -239,7 +254,6 @@ class Sphere(Shape3D):
 
     def get_volume(self) -> float:
         """
-
         :return: Volume of the sphere
         """
         return 4 / 3 * math.pi * self.r**3
@@ -256,6 +270,8 @@ class Parallelepiped(Shape3D):
         self.b = b
         self.h = h
         self.s = [Rectangle(a, b), Rectangle(b, h), Rectangle(a, h)]
+        if self.a <= 0 or self.b <= 0 or self.h <= 0:
+            raise ValueError
 
     def get_area(self) -> float:
         """
@@ -293,6 +309,8 @@ class Pyramid(Shape3D):
         super().__init__()
         self.square = Square(x)
         self.h = h
+        if self.h <= 0:
+            raise ValueError
 
     @property
     def x(self):
@@ -326,6 +344,8 @@ class Cylinder(Shape3D):
         super().__init__()
         self.circle = Circle(radius)
         self.h = h
+        if self.h <= 0:
+            raise ValueError
 
     def get_area(self) -> float:
         """
