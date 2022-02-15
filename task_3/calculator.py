@@ -3,6 +3,12 @@ from abc import ABC, abstractmethod
 
 
 class Shape(ABC):
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            if value <= 0:
+                raise ValueError("Parameters can't be negative")
+            setattr(self, key, value)
+
     @abstractmethod
     def get_area(self) -> None:
         pass
@@ -44,10 +50,7 @@ class Circle(Shape2D):
         """
         :param radius: Radius of the circle
         """
-        super().__init__()
-        self.radius = radius
-        if self.radius <= 0:
-            raise ValueError
+        super().__init__(radius=radius)
 
     def get_area(self) -> float:
         """Calculate circle area."""
@@ -64,10 +67,7 @@ class Rectangle(Shape2D):
     title = "Прямоугольник"
 
     def __init__(self, a, b) -> None:
-        super().__init__()
-        self.a, self.b = a, b
-        if self.a <= 0 or self.b <= 0:
-            raise ValueError
+        super().__init__(a=a, b=b)
 
     def get_perimeter(self) -> float:
         """Perimeter of a rectangle."""
@@ -98,12 +98,7 @@ class Triangle(Shape2D, HeightShape):
         :param b: Side y of the triangle
         :param c: Side z of the triangle
         """
-        super().__init__()
-        self.a = a
-        self.b = b
-        self.c = c
-        if self.a <= 0 or self.b <= 0 or self.c <= 0:
-            raise ValueError
+        super().__init__(a=a, b=b, c=c)
         if self.c >= self.b + self.a:
             raise ValueError
 
@@ -136,11 +131,7 @@ class Rhombus(Shape2D, HeightShape):
     title = "Ромб"
 
     def __init__(self, d1: float, d2: float) -> None:
-        super().__init__()
-        self.d1 = d1
-        self.d2 = d2
-        if self.d1 <= 0 or self.d2 <= 0:
-            raise ValueError
+        super().__init__(d1=d1, d2=d2)
 
     def get_perimeter(self) -> float:
         """
@@ -179,16 +170,10 @@ class Trapezoid(Shape2D):
         :param right_base_angle: Left base angle
         :param height: Height of the trapeze
         """
-        super().__init__()
-        self.base = base
-        self.left_base_angle = left_base_angle
-        self.right_base_angle = right_base_angle
-        self.height = height
+        super().__init__(base=base, left_base_angle=left_base_angle, right_base_angle=right_base_angle, height=height)
         self.right_side = self.get_right_leg()
         self.left_side = self.get_left_leg()
         self.upper_side = self.get_upper_base_side()
-        if self.base <= 0 or self.left_base_angle <= 0 or self.right_base_angle <= 0 or self.height <= 0:
-            raise ValueError
         if self.left_base_angle >= 90 or self.right_base_angle >= 90 or self.left_base_angle == self.right_base_angle:
             raise ValueError
 
@@ -241,10 +226,7 @@ class Sphere(Shape3D):
     title = "Сфера"
 
     def __init__(self, r: float) -> None:
-        super().__init__()
-        self.r = r
-        if self.r <= 0:
-            raise ValueError
+        super().__init__(r=r)
 
     def get_area(self) -> float:
         """
@@ -265,13 +247,8 @@ class Parallelepiped(Shape3D):
     title = "Параллелепипед"
 
     def __init__(self, a: float, b: float, h: float) -> None:
-        super().__init__()
-        self.a = a
-        self.b = b
-        self.h = h
+        super().__init__(a=a, b=b, h=h)
         self.s = [Rectangle(a, b), Rectangle(b, h), Rectangle(a, h)]
-        if self.a <= 0 or self.b <= 0 or self.h <= 0:
-            raise ValueError
 
     def get_area(self) -> float:
         """
@@ -306,11 +283,8 @@ class Pyramid(Shape3D):
     title = "Пирамида"
 
     def __init__(self, x: float, h: float) -> None:
-        super().__init__()
+        super().__init__(h=h)
         self.square = Square(x)
-        self.h = h
-        if self.h <= 0:
-            raise ValueError
 
     @property
     def x(self):
@@ -341,11 +315,8 @@ class Cylinder(Shape3D):
         :param radius: Radius of the cylinder
         :param h: Height of the cylinder
         """
-        super().__init__()
+        super().__init__(h=h)
         self.circle = Circle(radius)
-        self.h = h
-        if self.h <= 0:
-            raise ValueError
 
     def get_area(self) -> float:
         """
